@@ -7,6 +7,6 @@ public interface IChoiceRepository
 {
 	Task<IEnumerable<Choice>> GetChoices(GetChoicesFilter filter, CancellationToken cancellationToken = default);
 	Task<Choice?> GetById(int id, CancellationToken cancellationToken = default);
-	Task<bool> Add(string name, string image, ICollection<int>? choiceWins, CancellationToken cancellationToken = default);
-	Task<bool> Update(string name, string image, ICollection<int>? choiceWins, CancellationToken cancellationToken = default);
+	Task<bool> Add(Choice choice);
+	Task<bool> Update(Choice choice, CancellationToken cancellationToken = default);
 }

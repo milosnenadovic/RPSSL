@@ -23,6 +23,6 @@ public class LocalizationLabelConfiguration : IEntityTypeConfiguration<Localizat
 			.WithMany()
 			.HasForeignKey(x => x.LanguageId);
 
-		builder.HasKey(x => x.Key);
+		builder.HasKey(x => new { x.Key, x.LanguageId });
 	}
 }

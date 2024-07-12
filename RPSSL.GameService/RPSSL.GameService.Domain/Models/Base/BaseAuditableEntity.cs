@@ -6,5 +6,4 @@ public abstract class BaseAuditableEntity : BaseEntity
 	public required string CreatedBy { get; set; }
 	public DateTime? LastModified { get; set; }
 	public string? LastModifiedBy { get; set; }
-	public bool Active { get; set; }
 }
