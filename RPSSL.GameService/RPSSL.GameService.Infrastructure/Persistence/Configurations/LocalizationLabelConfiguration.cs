@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RPSSL.GameService.Domain.Models;
 
-namespace NewFolder.DocumentManagement.Infrastructure.Persistence.Configurations;
+namespace RPSSL.GameService.Infrastructure.Persistence.Configurations;
 
 public class LocalizationLabelConfiguration : IEntityTypeConfiguration<LocalizationLabel>
 {

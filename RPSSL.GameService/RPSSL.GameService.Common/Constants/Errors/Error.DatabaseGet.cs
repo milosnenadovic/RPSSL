@@ -7,5 +7,6 @@ public static partial class Error
 		public static string User => "ErrorDatabaseGetUser";
 		public static string Users => "ErrorDatabaseGetUsers";
 		public static string LocalizationLabels => "ErrorDatabaseGetLocalizationLabels";
+		public static string Languages => "ErrorDatabaseGetLanguages";
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Results;
-using System.Runtime.Serialization;
 
 namespace RPSSL.GameService.Common.Exceptions;
 

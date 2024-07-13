@@ -22,7 +22,7 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "An error occurred while initialising the database.");
-			throw;
+			//throw;
 		}
 	}
 
@@ -206,7 +206,8 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetUser", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: korisnik" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetUsers", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: korisnici" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetLocalizationLabels", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: labele" });
-		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetNotifications", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: notifikacije" });
+		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetLanguages", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: jezici" });
+		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetNotifications", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: notifikacije" }); 
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseAddUser", LanguageId = 2, Value = "Problem sa upisom u bazu: korisnik" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseAddNotification", LanguageId = 2, Value = "Problem sa upisom u bazu: notifikacija" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseUpdateUser", LanguageId = 2, Value = "Problem sa ažuriranjem u bazi: korisnik" });
@@ -342,6 +343,7 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetUser", LanguageId = 1, Value = "Database GET problem: user" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetUsers", LanguageId = 1, Value = "Database GET problem: users" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetLocalizationLabels", LanguageId = 1, Value = "Database GET problem: localization labels" });
+		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetLanguages", LanguageId = 1, Value = "Database GET problem: localization labels" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetNotifications", LanguageId = 1, Value = "Database GET problem: notifications" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseAddUser", LanguageId = 1, Value = "Database ADD problem: user" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseAddNotification", LanguageId = 1, Value = "Database ADD problem: notification" });

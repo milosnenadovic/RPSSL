@@ -20,6 +20,6 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
 			.HasMaxLength(2)
 			.IsRequired();
 
-		builder.HasKey(x => x.LanguageCode);
+		builder.HasKey(x => x.Id);
 	}
 }

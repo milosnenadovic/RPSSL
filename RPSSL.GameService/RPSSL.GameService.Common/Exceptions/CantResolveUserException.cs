@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace RPSSL.GameService.Common.Exceptions;
 
 [Serializable]
