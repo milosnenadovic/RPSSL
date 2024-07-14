@@ -11,5 +11,5 @@ public enum GetScoreboardSortBy
 	[Description("PlayedAt")]
 	PlayedAt = 3,
 	[Description("Result")]
-	Created = 4
+	Result = 4
 }

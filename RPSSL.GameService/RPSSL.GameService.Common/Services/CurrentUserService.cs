@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using RPSSL.GameService.Common.Configurations;
-using RPSSL.GameService.Common.Constants.Errors;
-using RPSSL.GameService.Common.Exceptions;
 using RPSSL.GameService.Common.Helpers;
 using RPSSL.GameService.Domain.Models;
 using System.IdentityModel.Tokens.Jwt;

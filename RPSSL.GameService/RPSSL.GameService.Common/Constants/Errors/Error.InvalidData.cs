@@ -18,5 +18,8 @@ public static partial class Error
 		public static string PasswordLongerThan50 => "ErrorInvalidDataPasswordLongerThan50";
 		public static string PasswordShorterThan8 => "ErrorInvalidDataPasswordShorterThan8";
 		public static string PasswordFormat => "ErrorInvalidDataPasswordFormat";
+		public static string PlayerChoice => "ErrorInvalidDataPlayerChoice";
+		public static string ComputerChoice => "ErrorInvalidDataComputerChoice";
+		public static string Language => "ErrorInvalidDataLanguage";
 	}
 }

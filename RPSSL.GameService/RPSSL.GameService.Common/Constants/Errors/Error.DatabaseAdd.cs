@@ -5,5 +5,6 @@ public static partial class Error
 	public static class DatabaseAdd
 	{
 		public static string User => "ErrorDatabaseAddUser";
+		public static string ChoiceHistory => "ErrorDatabaseAddChoiceHistory";
 	}
 }

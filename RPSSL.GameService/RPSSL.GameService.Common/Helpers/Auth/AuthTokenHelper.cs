@@ -34,6 +34,11 @@ public static class AuthTokenHelper
 		return await ReadFromTokenPayload(authToken, TokenData.Email);
 	}
 
+	public static async Task<string?> GetUsername(string authToken)
+	{
+		return await ReadFromTokenPayload(authToken, TokenData.Name);
+	}
+
 	public static string GenerateAuthToken(string email, string id, string userName, Role role, string secretKey, string issuer, string audience, short expiryMinutes)
 	{
 		var key = Encoding.UTF8.GetBytes(secretKey);
