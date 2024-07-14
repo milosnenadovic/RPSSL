@@ -10,7 +10,7 @@ public class SuccessResponse
 	public static SuccessResponse Success()
 		=> new();
 
-	public static SuccessResponse<T> Success<T>(T result) 
+	public static SuccessResponse<T> Success<T>(T result)
 		=> new(result);
 }
 

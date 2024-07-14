@@ -15,5 +15,5 @@ public static partial class Error
 		public static string Email => "ErrorRequiredEmail";
 		public static string Password => "ErrorRequiredPassword";
 		public static string CurrentUser => "ErrorRequiredCurrentUser";
-    }
+	}
 }
