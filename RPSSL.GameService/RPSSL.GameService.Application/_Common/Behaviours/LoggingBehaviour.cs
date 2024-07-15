@@ -19,7 +19,7 @@ public class LoggingBehaviour<TRequest, TResponse>(ILogger<LoggingBehaviour<TReq
 		if (_publicHandlers.Contains(requestName))
 			_logger.LogDebug("{Name} AccountId=null {@Request}", requestName, request);
 		else
-			_logger.LogDebug("{Name} {@AccountId} {@Request}", requestName, _currentUserService.CurrentUser.Email, request);
+			_logger.LogDebug("{Name} {@AccountId} {@Request}", requestName, _currentUserService.CurrentUser?.Username ?? string.Empty, request);
 
 		return await next.Invoke();
 	}

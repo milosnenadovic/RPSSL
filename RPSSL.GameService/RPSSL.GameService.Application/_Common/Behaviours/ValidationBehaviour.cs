@@ -24,7 +24,7 @@ public sealed class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValida
 				.ToList();
 
 			if (failures.Count > 0)
-				throw new RPSSL.GameService.Common.Exceptions.ValidationException(failures);
+				throw new Common.Exceptions.ValidationException(failures);
 		}
 		return await next();
 	}

@@ -10,12 +10,10 @@
     <PackageReference Include="FluentValidation" Version="11.9.2" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
     <PackageReference Include="Mapster" Version="7.4.0" />
-    <PackageReference Include="MediatR" Version="12.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RPSSL.GameService.Common\RPSSL.GameService.Common.csproj" />
-    <ProjectReference Include="..\RPSSL.GameService.Contracts\RPSSL.GameService.Contracts.csproj" />
     <ProjectReference Include="..\RPSSL.GameService.Domain\RPSSL.GameService.Domain.csproj" />
   </ItemGroup>
 

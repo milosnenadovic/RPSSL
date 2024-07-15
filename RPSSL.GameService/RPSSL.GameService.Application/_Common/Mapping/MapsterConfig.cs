@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 using RPSSL.GameService.Application.Localizations.Queries.GetLocalizationLabels;
+using RPSSL.GameService.Application.Users.Commands.LoginUser;
 using RPSSL.GameService.Domain.Models;
 using System.Reflection;
 
@@ -15,6 +16,10 @@ public static class MapsterConfig
 			.NewConfig()
 			.Map(dest => dest.LanguageId, src => src.First().LanguageId)
 			.Map(dest => dest.LocalizationLabels, src => src);
+
+		TypeAdapterConfig<User, LoginUserCommandResponse>
+			.NewConfig()
+			.Map(dest => dest.Username, src => src.UserName);
 
 		//TypeAdapterConfig<Contract, GetContractsQueryResponse>
 		//	.NewConfig()
