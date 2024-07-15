@@ -42,7 +42,7 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICur
 			_curUser = new CurrentUser
 			{
 				UserId = httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.UserId)),
-				Role = (Role)int.Parse(httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Role))),
+				Role = (Role) Enum.Parse(typeof(Role),httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Role))),
 				Email = httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Email)),
 				Username = httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Name)),
 				AuthToken = token

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using RPSSL.GameService.Domain.Filters;
 using RPSSL.GameService.Domain.Abstractions;
+using RPSSL.GameService.Domain.Filters;
 using RPSSL.GameService.Domain.Models;
 using RPSSL.GameService.Infrastructure.Persistence;
 
@@ -26,21 +26,23 @@ public class LocalizationRepository : ILocalizationRepository
 	public async Task<IEnumerable<LocalizationLabel>?> GetLocalizationLabels(GetLocalizationsLabelFilter filter, CancellationToken cancellationToken = default)
 	{
 		string memoryCacheKey = $"GetLocalizationLabels-{filter.LanguageId}";
-		return await _memoryCache.GetOrCreateAsync(
-			memoryCacheKey,
-			async entry =>
+
+		if (!_memoryCache.TryGetValue(memoryCacheKey, out IEnumerable<LocalizationLabel>? labels))
+		{
+			labels = await _dbContext.LocalizationLabel
+				.AsNoTracking()
+				.Where(x => filter.LanguageId == null || x.LanguageId == filter.LanguageId)
+				.ToListAsync(cancellationToken);
+
+			var cacheEntryOptions = new MemoryCacheEntryOptions
 			{
-				entry.SetAbsoluteExpiration(TimeSpan.FromDays(1));
+				AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
+			};
 
-				var labels = _dbContext.LocalizationLabel
-					.AsNoTracking();
+			_memoryCache.Set(memoryCacheKey, labels, cacheEntryOptions);
+		}
 
-				if (filter.LanguageId is not null)
-					labels = labels.Where(x => x.LanguageId == filter.LanguageId);
-
-				return await Task.FromResult(labels.AsEnumerable());
-			}
-		);
+		return labels;
 	}
 	#endregion
 
@@ -52,18 +54,22 @@ public class LocalizationRepository : ILocalizationRepository
 	public async Task<IEnumerable<Language>?> GetLanguages(CancellationToken cancellationToken = default)
 	{
 		string memoryCacheKey = "GetLanguages";
-		return await _memoryCache.GetOrCreateAsync(
-			memoryCacheKey,
-			async entry =>
+
+		if (!_memoryCache.TryGetValue(memoryCacheKey, out IEnumerable<Language>? languages))
+		{
+			languages = await _dbContext.Language
+				.AsNoTracking()
+				.ToListAsync(cancellationToken);
+
+			var cacheEntryOptions = new MemoryCacheEntryOptions
 			{
-				entry.SetAbsoluteExpiration(TimeSpan.FromDays(1));
+				AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
+			};
 
-				var languages = _dbContext.Language
-				.AsNoTracking();
+			_memoryCache.Set(memoryCacheKey, languages, cacheEntryOptions);
+		}
 
-				return await Task.FromResult(languages.AsEnumerable());
-			}
-		);
+		return languages;
 	}
 	#endregion
 
@@ -71,6 +77,7 @@ public class LocalizationRepository : ILocalizationRepository
 	/// <summary>
 	/// Add new or update existing localization label
 	/// </summary>
+	/// <param name="label"></param>
 	/// <returns></returns>
 	public async Task<bool> SaveLocalizationLabel(LocalizationLabel label, CancellationToken cancellationToken = default)
 	{

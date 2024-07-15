@@ -1,5 +1,6 @@
 ﻿using RPSSL.GameService.Domain.Models.Base;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RPSSL.GameService.Domain.Models;
 
@@ -7,7 +8,8 @@ public class User : BaseAuditableIdentityEntity
 {
 	public Role Role { get; set; } = Role.User;
 
-	public virtual ICollection<ChoicesHistory>? ChoicesHistory { get; set; }
+	[NotMapped]
+	public string? AuthToken { get; set; }
 }
 
 public enum Role

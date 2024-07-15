@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using RPSSL.GameService.Domain.Filters;
 using RPSSL.GameService.Domain.Abstractions;
+using RPSSL.GameService.Domain.Filters;
 using RPSSL.GameService.Domain.Models;
 using RPSSL.GameService.Infrastructure.Persistence;
 
@@ -18,6 +18,11 @@ public class ChoiceRepository : IChoiceRepository
 	#endregion
 
 	#region GetById
+	/// <summary>
+	/// Get choice by id
+	/// </summary>
+	/// <param name="id"></param>
+	/// <returns></returns>
 	public async Task<Choice?> GetById(int id, CancellationToken cancellationToken = default)
 	{
 		return await _dbContext.Choice
@@ -28,6 +33,11 @@ public class ChoiceRepository : IChoiceRepository
 	#endregion
 
 	#region GetChoices
+	/// <summary>
+	/// Get choices by filterName or active properties
+	/// </summary>
+	/// <param name="filter"></param>
+	/// <returns></returns>
 	public async Task<IEnumerable<Choice>> GetChoices(GetChoicesFilter filter, CancellationToken cancellationToken = default)
 	{
 		var choices = _dbContext.Choice
@@ -49,15 +59,23 @@ public class ChoiceRepository : IChoiceRepository
 	#endregion
 
 	#region Add
-	public async Task<bool> Add(Choice choice)
+	/// <summary>
+	/// Add new choice
+	/// </summary>
+	/// <param name="choice"></param>
+	/// <returns></returns>
+	public void Add(Choice choice)
 	{
 		_dbContext.Choice.Add(choice);
-
-		return await Task.FromResult(true);
 	}
 	#endregion
 
 	#region Update
+	/// <summary>
+	/// Update choice
+	/// </summary>
+	/// <param name="choice"></param>
+	/// <returns></returns>
 	public async Task<bool> Update(Choice choice, CancellationToken cancellationToken = default)
 	{
 		var dbChoice = await _dbContext.Choice.FindAsync([choice.Id], cancellationToken: cancellationToken);
@@ -66,7 +84,7 @@ public class ChoiceRepository : IChoiceRepository
 			return await Task.FromResult(false);
 
 		dbChoice.Name = choice.Name;
-		dbChoice.Image = choice.Image;
+		dbChoice.Active = choice.Active;
 
 		return await Task.FromResult(true);
 	}

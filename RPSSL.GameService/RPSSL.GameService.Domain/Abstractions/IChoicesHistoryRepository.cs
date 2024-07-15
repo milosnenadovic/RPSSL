@@ -6,6 +6,6 @@ namespace RPSSL.GameService.Domain.Abstractions;
 public interface IChoicesHistoryRepository
 {
 	Task<KeyValuePair<IEnumerable<ChoicesHistory>, int>> GetChoicesHistory(GetChoicesHistoryFilter filter, CancellationToken cancellationToken = default);
-	Task<ChoicesHistory?> GetById(int id, CancellationToken cancellationToken = default);
-	Task<bool> Add(string playerId, short playerChoiceId, short computerChoiceId, CancellationToken cancellationToken = default);
+	void Add(ChoicesHistory choicesHistory, CancellationToken cancellationToken = default);
+	Task DeleteAll(string userId, CancellationToken cancellationToken = default);
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using RPSSL.GameService.Domain.Filters;
 using RPSSL.GameService.Domain.Abstractions;
+using RPSSL.GameService.Domain.Filters;
 using RPSSL.GameService.Domain.Models;
 using RPSSL.GameService.Infrastructure.Persistence;
 
@@ -12,10 +12,10 @@ public class UserRepository : IUserRepository
 	#region Setup
 	private readonly IApplicationDbContext _dbContext;
 	private readonly UserManager<User> _userManager;
-	//private readonly SignInManager<User> _signInManager;
+	private readonly SignInManager<User> _signInManager;
 
-	public UserRepository(IApplicationDbContext dbContext, UserManager<User> userManager)
-		=> (_dbContext, _userManager) = (dbContext, userManager);
+	public UserRepository(IApplicationDbContext dbContext, UserManager<User> userManager, SignInManager<User> signInManager)
+		=> (_dbContext, _userManager, _signInManager) = (dbContext, userManager, signInManager);
 	#endregion
 
 	#region GetById
@@ -39,37 +39,35 @@ public class UserRepository : IUserRepository
 	public async Task<KeyValuePair<IEnumerable<User>, int>> GetUsers(GetUsersFilter filter, CancellationToken cancellationToken = default)
 	{
 		var users = _dbContext.User
-			.AsNoTracking()
-			.Include(x => x.ChoicesHistory)
-			.AsQueryable();
+			.AsNoTracking();
 
-		if (!string.IsNullOrEmpty(filter.FilterEmail)) 
+		if (!string.IsNullOrEmpty(filter.FilterEmail))
 			users = users.Where(x => x.Email!.Contains(filter.FilterEmail, StringComparison.CurrentCultureIgnoreCase));
 
 		if (!string.IsNullOrEmpty(filter.FilterName))
 			users = users.Where(x => x.UserName!.Contains(filter.FilterName, StringComparison.CurrentCultureIgnoreCase));
 
-		if (filter.Active is not null) 
+		if (filter.Active is not null)
 			users = users.Where(x => x.Active == filter.Active);
 
-		if (filter.CreatedFrom is not null) 
+		if (filter.CreatedFrom is not null)
 			users = users.Where(x => x.Created >= filter.CreatedFrom);
 
-		if (filter.CreatedTo is not null) 
+		if (filter.CreatedTo is not null)
 			users = users.Where(x => x.Created <= filter.CreatedTo);
 
 		switch (filter.SortBy)
 		{
 			case 1:
-				if (filter.SortDescending) 
+				if (filter.SortDescending)
 					users = users.OrderByDescending(x => x.Email);
 				else
 					users = users.OrderBy(x => x.Email);
 				break;
 			case 2:
-				if (filter.SortDescending) 
+				if (filter.SortDescending)
 					users = users.OrderByDescending(x => x.UserName);
-				else 
+				else
 					users = users.OrderBy(x => x.UserName);
 				break;
 			case 3:
@@ -85,7 +83,7 @@ public class UserRepository : IUserRepository
 					users = users.OrderBy(x => x.Active);
 				break;
 			default:
-				if (filter.SortDescending) 
+				if (filter.SortDescending)
 					users = users.OrderByDescending(x => x.Id);
 				else
 					users = users.OrderBy(x => x.Id);
@@ -155,10 +153,10 @@ public class UserRepository : IUserRepository
 	{
 		var changedPasswordResult = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
 
-		if (changedPasswordResult is null) 
+		if (changedPasswordResult is null)
 			return await Task.FromResult(false);
 
-		if (!changedPasswordResult.Succeeded) 
+		if (!changedPasswordResult.Succeeded)
 			return await Task.FromResult(false);
 
 		return await Task.FromResult(true);
@@ -176,7 +174,7 @@ public class UserRepository : IUserRepository
 	{
 		var savedUser = await _userManager.CreateAsync(user, password);
 
-		if (!savedUser.Succeeded) 
+		if (!savedUser.Succeeded)
 			return null;
 
 		return user;
@@ -196,50 +194,66 @@ public class UserRepository : IUserRepository
 		if (updateResult is null)
 			return await Task.FromResult(false);
 
-		if (!updateResult.Succeeded) 
+		if (!updateResult.Succeeded)
 			return await Task.FromResult(false);
 
 		return await Task.FromResult(true);
 	}
 	#endregion
 
-	//#region Login
-	///// <summary>
-	///// Login user with password
-	///// Interaction with DB using SignInManager
-	///// </summary>
-	///// <param name="user"></param>
-	///// <param name="password"></param>
-	///// <param name="rememberMe"></param>
-	///// <param name="refreshTokenExpiryTime"></param>
-	///// <returns></returns>
-	//public async Task<User?> Login(User user, string password, bool rememberMe, DateTime refreshTokenExpiryTime)
-	//{
-	//	var loggedInUser = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure: false);
-	//	if (loggedInUser is null) return null;
-	//	if (!loggedInUser.Succeeded) return null;
+	#region Login
+	/// <summary>
+	/// Login user with password
+	/// </summary>
+	/// <param name="user"></param>
+	/// <param name="password"></param>
+	/// <param name="persistentLogin"></param>
+	/// <returns></returns>
+	public async Task<User?> Login(User user, string password, bool persistentLogin = false)
+	{
+		var loggedInUser = await _signInManager.PasswordSignInAsync(user, password, persistentLogin, lockoutOnFailure: false);
+		if (loggedInUser is null)
+			return null;
+		if (!loggedInUser.Succeeded)
+			return null;
 
-	//	user.RefreshToken = AuthTokenHelper.GenerateRefreshToken();
-	//	user.RefreshTokenExpiryTime = refreshTokenExpiryTime;
-	//	user.LastModifiedBy = "system";
+		user.LastModifiedBy = "system";
 
-	//	var updatedUser = await _userManager.UpdateAsync(user);
-	//	if (updatedUser is null) return null;
-	//	if (!updatedUser.Succeeded) return null;
+		var updatedUser = await _userManager.UpdateAsync(user);
+		if (updatedUser is null)
+			return null;
+		if (!updatedUser.Succeeded)
+			return null;
 
-	//	return user;
-	//}
-	//#endregion
+		return user;
+	}
+	#endregion
 
-	//#region Logout
-	///// <summary>
-	///// Logout current user
-	///// Interaction with DB using SignInManager
-	///// </summary>
-	///// <returns></returns>
-	//public async Task Logout()
-	//{
-	//	await _signInManager.SignOutAsync();
-	//}
-	//#endregion
+	#region Logout
+	/// <summary>
+	/// Logout current user
+	/// </summary>
+	/// <returns></returns>
+	public async Task Logout()
+	{
+		await _signInManager.SignOutAsync();
+	}
+	#endregion
+
+	#region AddToRole
+	/// <summary>
+	/// Add new user to roles
+	/// </summary>
+	/// <param name="user"></param>
+	/// <returns></returns>
+	public async Task<bool> AddToRole(User user)
+	{
+		var roleAdded = await _userManager.AddToRoleAsync(user, user.Role.ToString());
+
+		if (!roleAdded.Succeeded)
+			return await Task.FromResult(false);
+
+		return await Task.FromResult(true);
+	}
+	#endregion
 }

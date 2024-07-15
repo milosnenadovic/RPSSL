@@ -1,8 +1,9 @@
-﻿namespace RPSSL.GameService.Domain.Models;
+﻿using RPSSL.GameService.Domain.Models.Base;
 
-public class Language
+namespace RPSSL.GameService.Domain.Models;
+
+public class Language : BaseEntity
 {
-	public short Id { get; set; }
 	public required string Name { get; set; }
 	public required string LanguageCode { get; set; }
 	public required string CountryId { get; set; }

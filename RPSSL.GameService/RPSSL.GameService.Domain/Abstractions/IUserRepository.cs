@@ -11,8 +11,9 @@ public interface IUserRepository
 	Task<User?> GetByEmail(string email);
 	Task<User?> Add(User user, string password);
 	Task<bool> Update(User user);
-	//Task<User?> Login(User user, string password, bool rememberMe, CancellationToken cancellationToken = default);
-	//Task Logout(CancellationToken cancellationToken = default);
+	Task<User?> Login(User user, string password, bool persistentLogin = false);
+	Task Logout();
 	Task<bool> CheckPassword(User user, string password);
 	Task<bool> ChangePassword(User user, string oldPassword, string newPassword);
+	Task<bool> AddToRole(User user);
 }
