@@ -60,19 +60,5 @@ public class JwtTokenValidationMiddleware(RequestDelegate next, TokenValidationP
 			var result = JsonSerializer.Serialize(errorEpiResponse);
 			await context.Response.WriteAsync(result);
 		}
-		catch (Exception ex)
-		{
-			context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-			var errorEpiResponse = new ErrorApiResponse()
-			{
-				Detail = ex.Message,
-				Title = ErrorCodes.Authorization.ToString(),
-				ErrorCode = (int)ErrorCodes.Authorization,
-				ErrorCodes = []
-			};
-
-			var result = JsonSerializer.Serialize(errorEpiResponse);
-			await context.Response.WriteAsync(result);
-		}
 	}
 }

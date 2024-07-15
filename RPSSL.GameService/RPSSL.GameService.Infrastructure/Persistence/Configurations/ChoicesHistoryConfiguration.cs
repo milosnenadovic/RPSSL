@@ -8,7 +8,7 @@ public class ChoicesHistoryConfiguration : IEntityTypeConfiguration<ChoicesHisto
 {
 	public void Configure(EntityTypeBuilder<ChoicesHistory> builder)
 	{
-		builder.Property(x => x.PlayerId)
+		builder.Property(x => x.PlayerChoiceId)
 			.HasAnnotation("MinValue", 1)
 			.HasAnnotation("MaxValue", 5)
 			.IsRequired();
@@ -21,5 +21,7 @@ public class ChoicesHistoryConfiguration : IEntityTypeConfiguration<ChoicesHisto
 		builder.Property(x => x.PlayerId)
 			.HasMaxLength(36)
 			.IsRequired();
+
+		builder.HasIndex(x => x.PlayerId);
 	}
 }

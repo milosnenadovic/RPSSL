@@ -185,17 +185,15 @@ namespace RPSSL.GameService.Infrastructure.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Choice");
                 });
@@ -216,17 +214,19 @@ namespace RPSSL.GameService.Infrastructure.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 
-                    b.Property<short>("BeatsChoiceId")
-                        .HasColumnType("smallint")
+                    b.Property<int>("BeatsChoiceId")
+                        .HasColumnType("integer")
                         .HasAnnotation("MaxValue", 5)
                         .HasAnnotation("MinValue", 1);
 
-                    b.Property<short>("ChoiceId")
-                        .HasColumnType("smallint")
+                    b.Property<int>("ChoiceId")
+                        .HasColumnType("integer")
                         .HasAnnotation("MaxValue", 5)
                         .HasAnnotation("MinValue", 1);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChoiceId");
 
                     b.ToTable("ChoiceWin");
                 });
@@ -242,11 +242,8 @@ namespace RPSSL.GameService.Infrastructure.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("ChoiceId")
-                        .HasColumnType("integer");
-
-                    b.Property<short>("ComputerChoiceId")
-                        .HasColumnType("smallint")
+                    b.Property<int>("ComputerChoiceId")
+                        .HasColumnType("integer")
                         .HasAnnotation("MaxValue", 5)
                         .HasAnnotation("MinValue", 1);
 
@@ -265,36 +262,33 @@ namespace RPSSL.GameService.Infrastructure.Migrations
                         .HasMaxLength(96)
                         .HasColumnType("character varying(96)");
 
-                    b.Property<short>("PlayerChoiceId")
-                        .HasColumnType("smallint");
+                    b.Property<int>("PlayerChoiceId")
+                        .HasColumnType("integer")
+                        .HasAnnotation("MaxValue", 5)
+                        .HasAnnotation("MinValue", 1);
 
                     b.Property<string>("PlayerId")
                         .IsRequired()
                         .HasMaxLength(36)
-                        .HasColumnType("character varying(36)")
-                        .HasAnnotation("MaxValue", 5)
-                        .HasAnnotation("MinValue", 1);
-
-                    b.Property<string>("UserId")
-                        .HasMaxLength(96)
-                        .HasColumnType("character varying(96)");
+                        .HasColumnType("character varying(36)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChoiceId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("PlayerId");
 
                     b.ToTable("ChoicesHistory");
                 });
 
             modelBuilder.Entity("RPSSL.GameService.Domain.Models.Language", b =>
                 {
-                    b.Property<short>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("CountryId")
                         .IsRequired()
@@ -322,8 +316,8 @@ namespace RPSSL.GameService.Infrastructure.Migrations
                         .HasMaxLength(48)
                         .HasColumnType("character varying(48)");
 
-                    b.Property<short>("LanguageId")
-                        .HasColumnType("smallint");
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -486,15 +480,13 @@ namespace RPSSL.GameService.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RPSSL.GameService.Domain.Models.ChoicesHistory", b =>
+            modelBuilder.Entity("RPSSL.GameService.Domain.Models.ChoiceWin", b =>
                 {
                     b.HasOne("RPSSL.GameService.Domain.Models.Choice", null)
                         .WithMany("ChoiceWins")
-                        .HasForeignKey("ChoiceId");
-
-                    b.HasOne("RPSSL.GameService.Domain.Models.User", null)
-                        .WithMany("ChoicesHistory")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ChoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RPSSL.GameService.Domain.Models.LocalizationLabel", b =>
@@ -511,11 +503,6 @@ namespace RPSSL.GameService.Infrastructure.Migrations
             modelBuilder.Entity("RPSSL.GameService.Domain.Models.Choice", b =>
                 {
                     b.Navigation("ChoiceWins");
-                });
-
-            modelBuilder.Entity("RPSSL.GameService.Domain.Models.User", b =>
-                {
-                    b.Navigation("ChoicesHistory");
                 });
 #pragma warning restore 612, 618
         }

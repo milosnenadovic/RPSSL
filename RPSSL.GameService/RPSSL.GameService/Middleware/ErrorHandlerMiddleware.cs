@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Antiforgery;
-using RPSSL.GameService.Common.Constants.Errors;
+﻿using RPSSL.GameService.Common.Constants.Errors;
 using RPSSL.GameService.Common.Exceptions;
 using RPSSL.GameService.Common.Response;
 using RPSSL.GameService.Contracts._Common;
@@ -19,54 +18,122 @@ public class ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMi
 		{
 			await _next(context);
 		}
-		catch (Exception error)
+		catch (ValidationException error)
 		{
-			var response = context.Response;
-			response.ContentType = "application/json";
+			context.Response.ContentType = "application/json";
 
 			var errorApiResponse = new ErrorApiResponse
 			{
 				Detail = error.Message
 			};
 
-			switch (error)
+			context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+			errorApiResponse.ErrorCode = (int)HttpStatusCode.BadRequest;
+			errorApiResponse.Title = Error.Validation.Middleware;
+			errorApiResponse.ErrorCodes = [];
+			foreach (var err in error.Errors)
 			{
-				case ValidationException ex:
-					response.StatusCode = (int)HttpStatusCode.BadRequest;
-					errorApiResponse.Title = Error.Validation.Middleware;
-					errorApiResponse.ErrorCodes = [];
-					foreach (var err in ex.Errors)
-					{
-						foreach (string errorValue in err.Value)
-						{
-							errorApiResponse.ErrorCodes.Add(new() { Code = err.Key, Description = errorValue });
-							errorApiResponse.Detail = errorValue;
-						}
-					}
-					break;
-				case CantResolveUserException ex:
-					response.StatusCode = (int)HttpStatusCode.Unauthorized;
-					errorApiResponse.Title = Error.Authorization.CantResolveUser;
-					break;
-				case AntiforgeryValidationException ex:
-					response.StatusCode = (int)HttpStatusCode.Unauthorized;
-					errorApiResponse.Title = Error.Authorization.MissingToken;
-					errorApiResponse.Detail = ex.InnerException?.Message ?? string.Empty;
-					break;
-				case KeyNotFoundException:
-					response.StatusCode = (int)HttpStatusCode.NotFound;
-					errorApiResponse.Title = Error.CantFind.Key;
-					break;
-				default:
-					response.StatusCode = (int)HttpStatusCode.InternalServerError;
-					errorApiResponse.Title = ErrorCodes.UnspecifiedError.ToString();
-					break;
+				foreach (string errorValue in err.Value)
+				{
+					errorApiResponse.ErrorCodes.Add(new() { Code = err.Key, Description = errorValue });
+					errorApiResponse.Detail = errorValue;
+				}
 			}
 
 			_logger.LogError(error, error.Message);
 
 			var result = JsonSerializer.Serialize(errorApiResponse);
-			await response.WriteAsync(result);
+			await context.Response.WriteAsync(result);
+		}
+		catch (InvalidOperationException error) when (error.Message.Contains("The AuthorizationPolicy named"))
+		{
+			context.Response.ContentType = "application/json";
+
+			var errorApiResponse = new ErrorApiResponse
+			{
+				Detail = error.Message
+			};
+
+			context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+			errorApiResponse.ErrorCode = (int)HttpStatusCode.Unauthorized;
+			errorApiResponse.Title = Error.Authorization.CantResolveUser;
+
+			_logger.LogError(error, error.Message);
+
+			var result = JsonSerializer.Serialize(errorApiResponse);
+			await context.Response.WriteAsync(result);
+		}
+		catch (CantResolveUserException error)
+		{
+			context.Response.ContentType = "application/json";
+
+			var errorApiResponse = new ErrorApiResponse
+			{
+				Detail = error.Message
+			};
+
+			context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+			errorApiResponse.ErrorCode = (int)HttpStatusCode.Unauthorized;
+			errorApiResponse.Title = Error.Authorization.CantResolveUser;
+
+			_logger.LogError(error, error.Message);
+
+			var result = JsonSerializer.Serialize(errorApiResponse);
+			await context.Response.WriteAsync(result);
+		}
+		catch (UnauthorizedAccessException error)
+		{
+			context.Response.ContentType = "application/json";
+
+			var errorApiResponse = new ErrorApiResponse
+			{
+				Detail = error.Message
+			};
+
+			context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+			errorApiResponse.ErrorCode = (int)HttpStatusCode.Unauthorized;
+			errorApiResponse.Title = Error.Authorization.MissingToken;
+
+			_logger.LogError(error, error.Message);
+
+			var result = JsonSerializer.Serialize(errorApiResponse);
+			await context.Response.WriteAsync(result);
+		}
+		catch (KeyNotFoundException error)
+		{
+			context.Response.ContentType = "application/json";
+
+			var errorApiResponse = new ErrorApiResponse
+			{
+				Detail = error.Message
+			};
+
+			context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+			errorApiResponse.ErrorCode = (int)HttpStatusCode.NotFound;
+			errorApiResponse.Title = Error.CantFind.Key;
+
+			_logger.LogError(error, error.Message);
+
+			var result = JsonSerializer.Serialize(errorApiResponse);
+			await context.Response.WriteAsync(result);
+		}
+		catch (Exception error)
+		{
+			context.Response.ContentType = "application/json";
+
+			var errorApiResponse = new ErrorApiResponse
+			{
+				Detail = error.Message
+			};
+
+			context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+			errorApiResponse.ErrorCode = (int)HttpStatusCode.InternalServerError;
+			errorApiResponse.Title = ErrorCodes.UnspecifiedError.ToString();
+
+			_logger.LogError(error, error.Message);
+
+			var result = JsonSerializer.Serialize(errorApiResponse);
+			await context.Response.WriteAsync(result);
 		}
 	}
 }

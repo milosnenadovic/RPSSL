@@ -1,7 +1,7 @@
-﻿using RPSSL.GameService.Domain.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using RPSSL.GameService.Domain.Models;
 
 namespace RPSSL.GameService.Infrastructure.Persistence;
 
@@ -22,7 +22,7 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "An error occurred while initialising the database.");
-			//throw;
+			throw;
 		}
 	}
 
@@ -42,10 +42,80 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 	public async Task TrySeedAsync()
 	{
 		await SeedLanguages();
+		await SeedChoices();
 		await SeedLabels();
 		await SeedRoles();
 		await SeedUsers();
 	}
+
+	#region Choice
+	private async Task SeedChoices()
+	{
+		#region List of choices to seed
+		var choices = new List<Choice>
+		{
+			new()
+			{
+				Name = "Rock",
+				Active = true,
+				ChoiceWins = [
+					new() { BeatsChoiceId = 5, ActionName = "Crushes", Active = true },
+					new() { BeatsChoiceId = 3, ActionName = "Crushes", Active = true }
+					]
+			},
+			new()
+			{
+				Name = "Paper",
+				Active = true,
+				ChoiceWins = [
+					new() { BeatsChoiceId = 1, ActionName = "Covers", Active = true },
+					new() { BeatsChoiceId = 4, ActionName = "Disproves", Active = true }
+					]
+			},
+			new()
+			{
+				Name = "Scissors",
+				Active = true,
+				ChoiceWins = [
+					new() { BeatsChoiceId = 2, ActionName = "Cuts", Active = true },
+					new() { BeatsChoiceId = 5, ActionName = "Decapitates", Active = true }
+					]
+			},
+			new()
+			{
+				Name = "Spock",
+				Active = true,
+				ChoiceWins = [
+					new() { BeatsChoiceId = 3, ActionName = "Smashes", Active = true },
+					new() { BeatsChoiceId = 1, ActionName = "Vaporizes", Active = true }
+					]
+			},
+			new()
+			{
+				Name = "Lizard",
+				Active = true,
+				ChoiceWins = [
+					new() { BeatsChoiceId = 4, ActionName = "Poisons", Active = true },
+					new() { BeatsChoiceId = 2, ActionName = "Eats", Active = true }
+					]
+			}
+		};
+		#endregion
+
+		foreach (var choice in choices)
+			SeedChoice(choice);
+
+		void SeedChoice(Choice choice)
+		{
+			var dbLanguage = _context.Choice.FirstOrDefault(x => x.Name == choice.Name);
+
+			if (dbLanguage is null)
+				_context.Choice.Add(choice);
+		}
+
+		await _context.SaveChangesAsync();
+	}
+	#endregion
 
 	#region Localization
 
@@ -164,7 +234,7 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 		SeedLabel(new LocalizationLabel() { Key = "ErrorTokenParseJwtMalformed", LanguageId = 2, Value = "JWT problem: neispravan format" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorTokenParseUserId", LanguageId = 2, Value = "JWT problem: nedostaje korisnički ID" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorTokenParseRole", LanguageId = 2, Value = "JWT problem: nedostaje korisnička rola" });
-		SeedLabel(new LocalizationLabel() { Key = "ErrorTokenParseEmail", LanguageId = 2, Value = "JWT problem: nedostaje korisnički email" }); 
+		SeedLabel(new LocalizationLabel() { Key = "ErrorTokenParseEmail", LanguageId = 2, Value = "JWT problem: nedostaje korisnički email" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorCantFindKey", LanguageId = 2, Value = "Ne postoji ključ za traženi element" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorCantFindUser", LanguageId = 2, Value = "Ne postoji korisnik" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorCantFindNotification", LanguageId = 2, Value = "Ne postoji notifikacija" });
@@ -207,7 +277,7 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetUsers", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: korisnici" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetLocalizationLabels", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: labele" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetLanguages", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: jezici" });
-		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetNotifications", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: notifikacije" }); 
+		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseGetNotifications", LanguageId = 2, Value = "Problem sa izvlačenjem iz baze: notifikacije" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseAddUser", LanguageId = 2, Value = "Problem sa upisom u bazu: korisnik" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseAddNotification", LanguageId = 2, Value = "Problem sa upisom u bazu: notifikacija" });
 		SeedLabel(new LocalizationLabel() { Key = "ErrorDatabaseUpdateUser", LanguageId = 2, Value = "Problem sa ažuriranjem u bazi: korisnik" });
@@ -363,7 +433,7 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 
 			if (dbLabel is null)
 				_context.LocalizationLabel.Add(label);
-			else 
+			else
 				dbLabel.Value = label.Value;
 		}
 
@@ -385,7 +455,7 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 		async Task SeedRoleAsync(string role)
 		{
 			var dbRole = await _roleManager.FindByNameAsync(role);
-			if (dbRole is null) 
+			if (dbRole is null)
 				await _roleManager.CreateAsync(new IdentityRole { Name = role });
 		}
 
@@ -426,11 +496,11 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 
 		foreach (var user in users)
 		{
-			if (user.Email is null) 
+			if (user.Email is null)
 				continue;
-			
+
 			var userExists = await _userManager.FindByEmailAsync(user.Email);
-			
+
 			if (userExists is not null)
 				continue;
 
@@ -439,21 +509,6 @@ public sealed class ApplicationDbContextInitializer(ILogger<ApplicationDbContext
 			{
 				user.LastModifiedBy = "system";
 				await _userManager.AddToRoleAsync(user, user.Role.ToString());
-				//var addUserRole = await _userManager.AddToRoleAsync(user, user.Role.ToString());
-				//if (addUserRole.Succeeded)
-				//{
-				//	if (user.Active)
-				//	{
-				//		_context.Notification.Add(new Notification
-				//		{
-				//			NotificationType = NotificationType.NewUser,
-				//			Content = Common.Constants.Messages.Message.Notification.NewUser,
-				//			CreatedBy = "system",
-				//			OrganizationUserId = user.OrganizationUsers.First().Id,
-				//			Active = true
-				//		});
-				//	}
-				//}
 			}
 		}
 

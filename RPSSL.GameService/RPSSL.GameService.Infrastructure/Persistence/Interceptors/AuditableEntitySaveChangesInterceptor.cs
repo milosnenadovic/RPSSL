@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using RPSSL.GameService.Common.Services;
 using RPSSL.GameService.Domain.Models.Base;
-using RPSSL.GameService.Infrastructure.Persistence.Interceptors;
 
 namespace RPSSL.GameService.Infrastructure.Persistence.Interceptors;
 
@@ -27,7 +26,7 @@ public class AuditableEntitySaveChangesInterceptor(ICurrentUserService currentUs
 
 	public void UpdateEntities(DbContext? context)
 	{
-		if (context is null) 
+		if (context is null)
 			return;
 
 		foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
@@ -36,14 +35,14 @@ public class AuditableEntitySaveChangesInterceptor(ICurrentUserService currentUs
 			{
 				entry.Entity.Created = DateTime.UtcNow;
 				if (!(entry.Entity.CreatedBy ?? "").Equals("system", StringComparison.OrdinalIgnoreCase))
-					entry.Entity.CreatedBy = _currentUserService.CurrentUser.UserOrganizationId.ToString();
+					entry.Entity.CreatedBy = _currentUserService.CurrentUser.UserId.ToString();
 			}
 
 			if (entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
 			{
 				entry.Entity.LastModified = DateTime.UtcNow;
 				if (!(entry.Entity.LastModifiedBy ?? "").Equals("system", StringComparison.OrdinalIgnoreCase))
-					entry.Entity.LastModifiedBy = _currentUserService.CurrentUser.UserOrganizationId.ToString();
+					entry.Entity.LastModifiedBy = _currentUserService.CurrentUser.UserId.ToString();
 			}
 		}
 
@@ -53,14 +52,14 @@ public class AuditableEntitySaveChangesInterceptor(ICurrentUserService currentUs
 			{
 				entry.Entity.Created = DateTime.UtcNow;
 				if (!(entry.Entity.CreatedBy ?? "").Equals("system", StringComparison.OrdinalIgnoreCase))
-					entry.Entity.CreatedBy = _currentUserService.CurrentUser.UserOrganizationId.ToString();
+					entry.Entity.CreatedBy = _currentUserService.CurrentUser.UserId.ToString();
 			}
 
 			if (entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
 			{
 				entry.Entity.LastModified = DateTime.UtcNow;
 				if (!(entry.Entity.LastModifiedBy ?? "").Equals("system", StringComparison.OrdinalIgnoreCase))
-					entry.Entity.LastModifiedBy = _currentUserService.CurrentUser.UserOrganizationId.ToString();
+					entry.Entity.LastModifiedBy = _currentUserService.CurrentUser.UserId.ToString();
 			}
 		}
 	}

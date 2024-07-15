@@ -2,11 +2,9 @@
 
 namespace RPSSL.GameService.Infrastructure.Persistence;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(IApplicationDbContext context) : IUnitOfWork
 {
-	private readonly IApplicationDbContext _context;
-
-	public UnitOfWork(IApplicationDbContext context) => _context = context;
+	private readonly IApplicationDbContext _context = context;
 
 	public Task SaveChangesAsync(CancellationToken cancellationToken = default)
 	{

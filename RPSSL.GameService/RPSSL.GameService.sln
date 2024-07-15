@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPSSL.GameService.Domain", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPSSL.GameService.Infrastructure", "RPSSL.GameService.Infrastructure\RPSSL.GameService.Infrastructure.csproj", "{43D4338B-0822-4D08-BE08-C1F844850A38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPSSL.GameService.Common", "RPSSL.GameService.Common\RPSSL.GameService.Common.csproj", "{94201BD3-F781-409F-A9BD-AAC604B97969}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPSSL.GameService.Common", "RPSSL.GameService.Common\RPSSL.GameService.Common.csproj", "{94201BD3-F781-409F-A9BD-AAC604B97969}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPSSL.GameService.Application", "RPSSL.GameService.Application\RPSSL.GameService.Application.csproj", "{10DF32D7-D8EA-45C1-89E7-10595E45CEAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPSSL.GameService.Contracts", "RPSSL.GameService.Contracts\RPSSL.GameService.Contracts.csproj", "{A7DC5181-EA94-4E70-9A3F-26409834F2CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{94201BD3-F781-409F-A9BD-AAC604B97969}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94201BD3-F781-409F-A9BD-AAC604B97969}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94201BD3-F781-409F-A9BD-AAC604B97969}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10DF32D7-D8EA-45C1-89E7-10595E45CEAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10DF32D7-D8EA-45C1-89E7-10595E45CEAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10DF32D7-D8EA-45C1-89E7-10595E45CEAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10DF32D7-D8EA-45C1-89E7-10595E45CEAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7DC5181-EA94-4E70-9A3F-26409834F2CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7DC5181-EA94-4E70-9A3F-26409834F2CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7DC5181-EA94-4E70-9A3F-26409834F2CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7DC5181-EA94-4E70-9A3F-26409834F2CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

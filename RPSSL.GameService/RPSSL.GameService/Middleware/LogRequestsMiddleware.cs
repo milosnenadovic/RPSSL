@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using RPSSL.GameService.Common.Configurations;
+using RPSSL.GameService.Common.Configurations.Settings;
 using System.Text;
 
 namespace RPSSL.GameService.Middleware;
@@ -42,7 +42,7 @@ public class LogRequestsMiddleware(RequestDelegate next, Serilog.ILogger logger,
 				.ForContext("StatusCode", context.Response.StatusCode)
 				.ForContext("Headers", headers)
 				.Debug(@"Received {RequestMethod} {Url}{QueryString}", context.Request?.Method ?? string.Empty, url, context.Request?.QueryString.Value ?? string.Empty);
-			if (context.Request is not null) 
+			if (context.Request is not null)
 				context.Request.Body.Position = 0;
 		}
 

@@ -16,8 +16,11 @@ public class ChoiceConfiguration : IEntityTypeConfiguration<Choice>
 			.HasMaxLength(12)
 			.IsRequired();
 
-		builder.Property(x => x.Image)
-			.HasMaxLength(int.MaxValue)
-			.IsRequired();
+		builder.HasIndex(x => x.Name)
+			.IsUnique();
+
+		builder.HasMany(x => x.ChoiceWins)
+		   .WithOne()
+		   .HasForeignKey(x => x.ChoiceId);
 	}
 }
