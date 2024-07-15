@@ -13,12 +13,10 @@ public static class EnumHelper
 	/// <returns></returns>
 	public static string GetEnumDescription(Enum value)
 	{
-		FieldInfo fi = value.GetType().GetField(value.ToString());
+		FieldInfo? fi = value.GetType().GetField(value.ToString());
 
-		if (fi == null)
-		{
+		if (fi is null)
 			return value.ToString();
-		}
 		else
 		{
 			DescriptionAttribute[] attributes =

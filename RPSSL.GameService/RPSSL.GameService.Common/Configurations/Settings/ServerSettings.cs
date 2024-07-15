@@ -1,4 +1,4 @@
-﻿namespace RPSSL.GameService.Common.Configurations;
+﻿namespace RPSSL.GameService.Common.Configurations.Settings;
 
 public class ServerSettings
 {
