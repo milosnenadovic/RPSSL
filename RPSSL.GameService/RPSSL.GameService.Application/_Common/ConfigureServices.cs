@@ -10,21 +10,21 @@ namespace RPSSL.GameService.Application._Common;
 
 public static class ConfigureServices
 {
-	public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-	{
-		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-		services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
-		services.RegisterMapsterConfiguration();
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+        services.RegisterMapsterConfiguration();
 
-		services.AddCommonServices();
+        services.AddCommonServices();
 
-		#region Behaviours pipeline
-		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
-		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
-		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-		#endregion
+        #region Behaviours pipeline
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        #endregion
 
-		return services;
-	}
+        return services;
+    }
 }

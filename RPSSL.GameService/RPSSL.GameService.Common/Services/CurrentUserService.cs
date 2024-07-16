@@ -9,46 +9,46 @@ namespace RPSSL.GameService.Common.Services;
 
 public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
 {
-	private CurrentUser _curUser;
+    private CurrentUser _curUser;
 
-	public CurrentUser CurrentUser
-	{
-		get
-		{
-			if (_curUser is null)
-				SetPropertiesFromToken();
+    public CurrentUser CurrentUser
+    {
+        get
+        {
+            if (_curUser is null)
+                SetPropertiesFromToken();
 
-			return _curUser;
-		}
-	}
+            return _curUser;
+        }
+    }
 
-	void SetPropertiesFromToken()
-	{
-		var token = httpContextAccessor?.HttpContext?.Request.Headers[HttpContextItemKeys.Authorization].FirstOrDefault();
+    void SetPropertiesFromToken()
+    {
+        var token = httpContextAccessor?.HttpContext?.Request.Headers[HttpContextItemKeys.Authorization].FirstOrDefault();
 
-		if (string.IsNullOrEmpty(token))
-			return;
+        if (string.IsNullOrEmpty(token))
+            return;
 
-		if (token.StartsWith("bearer", StringComparison.CurrentCultureIgnoreCase))
-			token = token.Replace("Bearer ", string.Empty);
+        if (token.StartsWith("bearer", StringComparison.CurrentCultureIgnoreCase))
+            token = token.Replace("Bearer ", string.Empty);
 
-		var jwtoken = new JwtSecurityTokenHandler().ReadJwtToken(token);
-		var claims = jwtoken.Claims.ToList();
+        var jwtoken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        var claims = jwtoken.Claims.ToList();
 
-		var userIdentity = new ClaimsIdentity(claims, "Id");
-		if (httpContextAccessor?.HttpContext is not null)
-		{
-			httpContextAccessor.HttpContext.User = new ClaimsPrincipal(userIdentity);
-			_curUser = new CurrentUser
-			{
-				UserId = httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.UserId)),
-				Role = (Role) Enum.Parse(typeof(Role),httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Role))),
-				Email = httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Email)),
-				Username = httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Name)),
-				AuthToken = token
-			};
-			_ = Enum.TryParse(httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Role)), out Role curUserRole);
-			_curUser.Role = curUserRole;
-		}
-	}
+        var userIdentity = new ClaimsIdentity(claims, "Id");
+        if (httpContextAccessor?.HttpContext is not null)
+        {
+            httpContextAccessor.HttpContext.User = new ClaimsPrincipal(userIdentity);
+            _curUser = new CurrentUser
+            {
+                UserId = httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.UserId)),
+                Role = (Role)Enum.Parse(typeof(Role), httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Role))),
+                Email = httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Email)),
+                Username = httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Name)),
+                AuthToken = token
+            };
+            _ = Enum.TryParse(httpContextAccessor.HttpContext?.User?.FindFirstValue(EnumHelper.GetEnumDescription(TokenData.Role)), out Role curUserRole);
+            _curUser.Role = curUserRole;
+        }
+    }
 }

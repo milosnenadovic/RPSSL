@@ -6,22 +6,22 @@ namespace RPSSL.GameService.Infrastructure.Persistence.Configurations;
 
 public class ChoicesHistoryConfiguration : IEntityTypeConfiguration<ChoicesHistory>
 {
-	public void Configure(EntityTypeBuilder<ChoicesHistory> builder)
-	{
-		builder.Property(x => x.PlayerChoiceId)
-			.HasAnnotation("MinValue", 1)
-			.HasAnnotation("MaxValue", 5)
-			.IsRequired();
+    public void Configure(EntityTypeBuilder<ChoicesHistory> builder)
+    {
+        builder.Property(x => x.PlayerChoiceId)
+            .HasAnnotation("MinValue", 1)
+            .HasAnnotation("MaxValue", 5)
+            .IsRequired();
 
-		builder.Property(x => x.ComputerChoiceId)
-			.HasAnnotation("MinValue", 1)
-			.HasAnnotation("MaxValue", 5)
-			.IsRequired();
+        builder.Property(x => x.ComputerChoiceId)
+            .HasAnnotation("MinValue", 1)
+            .HasAnnotation("MaxValue", 5)
+            .IsRequired();
 
-		builder.Property(x => x.PlayerId)
-			.HasMaxLength(36)
-			.IsRequired();
+        builder.Property(x => x.PlayerId)
+            .HasMaxLength(36)
+            .IsRequired();
 
-		builder.HasIndex(x => x.PlayerId);
-	}
+        builder.HasIndex(x => x.PlayerId);
+    }
 }

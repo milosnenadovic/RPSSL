@@ -6,16 +6,16 @@ namespace RPSSL.GameService.Domain.Models;
 
 public class User : BaseAuditableIdentityEntity
 {
-	public Role Role { get; set; } = Role.User;
+    public Role Role { get; set; } = Role.User;
 
-	[NotMapped]
-	public string? AuthToken { get; set; }
+    [NotMapped]
+    public string? AuthToken { get; set; }
 }
 
 public enum Role
 {
-	[Description("User")]
-	User = 1,
-	[Description("Admin")]
-	Admin = 2
+    [Description("User")]
+    User = 1,
+    [Description("Admin")]
+    Admin = 2
 }

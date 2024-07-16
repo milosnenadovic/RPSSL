@@ -6,10 +6,10 @@ namespace RPSSL.GameService.Domain.Models;
 
 public class ChoicesHistory : BaseAuditableEntity
 {
-	public required string PlayerId { get; set; }
-	public int PlayerChoiceId { get; set; }
-	public int ComputerChoiceId { get; set; }
+    public required string PlayerId { get; set; }
+    public int PlayerChoiceId { get; set; }
+    public int ComputerChoiceId { get; set; }
 
-	[NotMapped]
-	public GameResult Result { get; set; }
+    [NotMapped]
+    public GameResult Result { get; set; }
 }

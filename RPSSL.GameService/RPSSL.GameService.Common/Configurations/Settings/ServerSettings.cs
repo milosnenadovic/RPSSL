@@ -2,8 +2,8 @@
 
 public class ServerSettings
 {
-	public const string SectionName = "ServerOptions";
+    public const string SectionName = "ServerOptions";
 
-	public required string AllowSwaggerCall { get; set; }
-	public required string LogRequestUrls { get; set; }
+    public required string AllowSwaggerCall { get; set; }
+    public required string LogRequestUrls { get; set; }
 }

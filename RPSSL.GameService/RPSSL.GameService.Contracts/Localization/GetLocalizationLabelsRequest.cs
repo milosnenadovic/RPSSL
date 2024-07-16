@@ -2,5 +2,5 @@
 
 public record GetLocalizationLabelsRequest
 {
-	public short LanguageId { get; set; }
+    public short LanguageId { get; set; }
 }

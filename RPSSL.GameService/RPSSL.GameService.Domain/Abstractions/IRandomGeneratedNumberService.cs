@@ -2,5 +2,5 @@
 
 public interface IRandomGeneratedNumberService
 {
-	Task<short> GetRandomNumber();
+    Task<short> GetRandomNumber();
 }

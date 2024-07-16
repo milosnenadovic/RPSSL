@@ -2,8 +2,8 @@
 
 public static partial class Error
 {
-	public static class Validation
-	{
-		public static string Middleware => "ErrorValidationMiddleware";
-	}
+    public static class Validation
+    {
+        public static string Middleware => "ErrorValidationMiddleware";
+    }
 }

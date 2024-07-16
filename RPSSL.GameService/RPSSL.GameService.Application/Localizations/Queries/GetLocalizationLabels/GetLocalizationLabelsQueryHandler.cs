@@ -9,17 +9,17 @@ namespace RPSSL.GameService.Application.Localizations.Queries.GetLocalizationLab
 
 public class GetLocalizationLabelsQueryHandler(ILocalizationRepository localizationService) : IRequestHandler<GetLocalizationLabelsQuery, IResponse<GetLocalizationLabelsQueryResponse>>
 {
-	private readonly ILocalizationRepository _localizationService = localizationService;
+    private readonly ILocalizationRepository _localizationService = localizationService;
 
-	public async Task<IResponse<GetLocalizationLabelsQueryResponse>> Handle(GetLocalizationLabelsQuery request, CancellationToken cancellationToken)
-	{
-		var localizationLabels = await _localizationService.GetLocalizationLabels(new GetLocalizationsLabelFilter(request.LanguageId), cancellationToken);
+    public async Task<IResponse<GetLocalizationLabelsQueryResponse>> Handle(GetLocalizationLabelsQuery request, CancellationToken cancellationToken)
+    {
+        var localizationLabels = await _localizationService.GetLocalizationLabels(new GetLocalizationsLabelFilter(request.LanguageId), cancellationToken);
 
-		if (localizationLabels is null)
-			return new ErrorResponse<GetLocalizationLabelsQueryResponse>((int)ErrorCodes.DatabaseGet, ErrorCodes.DatabaseGet.ToString(), Error.DatabaseGet.LocalizationLabels);
+        if (localizationLabels is null)
+            return new ErrorResponse<GetLocalizationLabelsQueryResponse>((int)ErrorCodes.DatabaseGet, ErrorCodes.DatabaseGet.ToString(), Error.DatabaseGet.LocalizationLabels);
 
-		var response = localizationLabels.Adapt<GetLocalizationLabelsQueryResponse>();
+        var response = localizationLabels.Adapt<GetLocalizationLabelsQueryResponse>();
 
-		return new SuccessResponse<GetLocalizationLabelsQueryResponse>(response);
-	}
+        return new SuccessResponse<GetLocalizationLabelsQueryResponse>(response);
+    }
 }

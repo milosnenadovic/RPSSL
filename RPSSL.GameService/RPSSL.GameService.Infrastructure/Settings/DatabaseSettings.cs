@@ -2,6 +2,6 @@
 
 public class DatabaseSettings
 {
-	public const string SectionName = "ConnectionStrings";
-	public required string DefaultConnection { get; set; }
+    public const string SectionName = "ConnectionStrings";
+    public required string DefaultConnection { get; set; }
 }

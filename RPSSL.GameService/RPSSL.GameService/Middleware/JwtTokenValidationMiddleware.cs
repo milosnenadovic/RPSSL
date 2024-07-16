@@ -10,55 +10,55 @@ namespace RPSSL.GameService.Middleware;
 
 public class JwtTokenValidationMiddleware(RequestDelegate next, TokenValidationParameters tokenValidationParameters)
 {
-	private readonly RequestDelegate next = next;
-	private readonly TokenValidationParameters tokenValidationParameters = tokenValidationParameters;
+    private readonly RequestDelegate next = next;
+    private readonly TokenValidationParameters tokenValidationParameters = tokenValidationParameters;
 
-	public async Task Invoke(HttpContext context)
-	{
-		var tokenHandler = new JwtSecurityTokenHandler();
-		var user = context.User;
+    public async Task Invoke(HttpContext context)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var user = context.User;
 
-		try
-		{
-			var token = context.Request.Headers[HttpContextItemKeys.Authorization];
-			if (!string.IsNullOrEmpty(token))
-			{
-				if (token.ToString().Contains("Bearer"))
-					token = token.ToString().Replace("Bearer ", "");
-				if (token.ToString().Contains("Authorization"))
-					token = token.ToString().Replace("Authorization ", "");
-				tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
-			}
+        try
+        {
+            var token = context.Request.Headers[HttpContextItemKeys.Authorization];
+            if (!string.IsNullOrEmpty(token))
+            {
+                if (token.ToString().Contains("Bearer"))
+                    token = token.ToString().Replace("Bearer ", "");
+                if (token.ToString().Contains("Authorization"))
+                    token = token.ToString().Replace("Authorization ", "");
+                tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
+            }
 
-			await next(context);
-		}
-		catch (SecurityTokenExpiredException ex)
-		{
-			context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-			var errorEpiResponse = new ErrorApiResponse()
-			{
-				Detail = ex.Message,
-				Title = ErrorCodes.Authorization.ToString(),
-				ErrorCode = (int)ErrorCodes.Authorization,
-				ErrorCodes = []
-			};
+            await next(context);
+        }
+        catch (SecurityTokenExpiredException ex)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            var errorEpiResponse = new ErrorApiResponse()
+            {
+                Detail = ex.Message,
+                Title = ErrorCodes.Authorization.ToString(),
+                ErrorCode = (int)ErrorCodes.Authorization,
+                ErrorCodes = []
+            };
 
-			var result = JsonSerializer.Serialize(errorEpiResponse);
-			await context.Response.WriteAsync(result);
-		}
-		catch (SecurityTokenInvalidSignatureException ex)
-		{
-			context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-			var errorEpiResponse = new ErrorApiResponse()
-			{
-				Detail = ex.Message,
-				Title = ErrorCodes.Authorization.ToString(),
-				ErrorCode = (int)ErrorCodes.Authorization,
-				ErrorCodes = []
-			};
+            var result = JsonSerializer.Serialize(errorEpiResponse);
+            await context.Response.WriteAsync(result);
+        }
+        catch (SecurityTokenInvalidSignatureException ex)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            var errorEpiResponse = new ErrorApiResponse()
+            {
+                Detail = ex.Message,
+                Title = ErrorCodes.Authorization.ToString(),
+                ErrorCode = (int)ErrorCodes.Authorization,
+                ErrorCodes = []
+            };
 
-			var result = JsonSerializer.Serialize(errorEpiResponse);
-			await context.Response.WriteAsync(result);
-		}
-	}
+            var result = JsonSerializer.Serialize(errorEpiResponse);
+            await context.Response.WriteAsync(result);
+        }
+    }
 }

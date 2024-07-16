@@ -4,7 +4,7 @@ namespace RPSSL.GameService.Domain.Models;
 
 public class ChoiceWin : BaseEntity
 {
-	public int ChoiceId { get; set; }
-	public int BeatsChoiceId { get; set; }
-	public required string ActionName { get; set; }
+    public int ChoiceId { get; set; }
+    public int BeatsChoiceId { get; set; }
+    public required string ActionName { get; set; }
 }

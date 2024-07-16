@@ -5,10 +5,10 @@ namespace RPSSL.GameService.Contracts.Scoreboard;
 
 public record GetScoreboardRequest : BaseQueryStringParameters<GetScoreboardSortBy>
 {
-	public short? PlayerChoiceId { get; set; }
-	public short? ComputerChoiceId { get; set; }
-	public int? Result { get; set; }
-	public DateTime? PlayedFrom { get; set; }
-	public DateTime? PlayedTo { get; set; }
-	public bool? Active { get; set; }
+    public short? PlayerChoiceId { get; set; }
+    public short? ComputerChoiceId { get; set; }
+    public int? Result { get; set; }
+    public DateTime? PlayedFrom { get; set; }
+    public DateTime? PlayedTo { get; set; }
+    public bool? Active { get; set; }
 }

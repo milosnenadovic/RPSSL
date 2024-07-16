@@ -2,8 +2,8 @@
 
 public static partial class Error
 {
-	public static class NotAllowed
-	{
-		public static string Role => "ErrorNotAllowedRole";
-	}
+    public static class NotAllowed
+    {
+        public static string Role => "ErrorNotAllowedRole";
+    }
 }

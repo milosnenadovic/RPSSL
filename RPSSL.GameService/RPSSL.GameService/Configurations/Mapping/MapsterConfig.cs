@@ -8,25 +8,25 @@ namespace RPSSL.GameService.Configurations.Mapping;
 
 public static class MapsterConfig
 {
-	public static void RegisterMapsterConfiguration(this IServiceCollection services)
-	{
-		#region Scoreboard
-		TypeAdapterConfig<GetScoreboardRequest, GetScoreboardQuery>
-			.NewConfig()
-			.MapWith(src => new GetScoreboardQuery(
-				src.PlayerChoiceId,
-				src.ComputerChoiceId,
-				(GameResult?)src.Result,
-				src.PlayedFrom,
-				src.PlayedTo)
-			{
-				PageNumber = src.PageNumber,
-				PageSize = src.PageSize,
-				SortBy = src.SortBy,
-				SortDescending = src.SortDescending
-			});
-		#endregion
+    public static void RegisterMapsterConfiguration(this IServiceCollection services)
+    {
+        #region Scoreboard
+        TypeAdapterConfig<GetScoreboardRequest, GetScoreboardQuery>
+            .NewConfig()
+            .MapWith(src => new GetScoreboardQuery(
+                src.PlayerChoiceId,
+                src.ComputerChoiceId,
+                (GameResult?)src.Result,
+                src.PlayedFrom,
+                src.PlayedTo)
+            {
+                PageNumber = src.PageNumber,
+                PageSize = src.PageSize,
+                SortBy = src.SortBy,
+                SortDescending = src.SortDescending
+            });
+        #endregion
 
-		TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
-	}
+        TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
+    }
 }

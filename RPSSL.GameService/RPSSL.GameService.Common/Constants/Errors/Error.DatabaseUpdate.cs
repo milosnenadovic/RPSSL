@@ -2,8 +2,8 @@
 
 public static partial class Error
 {
-	public static class DatabaseUpdate
-	{
-		public static string User => "ErrorDatabaseUpdateUser";
-	}
+    public static class DatabaseUpdate
+    {
+        public static string User => "ErrorDatabaseUpdateUser";
+    }
 }

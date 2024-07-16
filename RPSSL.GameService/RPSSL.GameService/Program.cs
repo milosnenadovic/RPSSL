@@ -24,27 +24,27 @@ builder.Services.AddHttpContextAccessor();
 
 #region Add extension services
 builder.Services
-	.AddServerServices(builder.Configuration)
-	.AddApplicationServices()
-	.AddInfrastructureServices(builder.Configuration);
+    .AddServerServices(builder.Configuration)
+    .AddApplicationServices()
+    .AddInfrastructureServices(builder.Configuration);
 
 #endregion
 
 #region Identity
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
-	options.Password.RequireDigit = true;
-	options.Password.RequireNonAlphanumeric = true;
-	options.Password.RequireLowercase = true;
-	options.Password.RequireUppercase = true;
-	options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 8;
 
-	options.User.RequireUniqueEmail = true;
+    options.User.RequireUniqueEmail = true;
 
-	options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-	options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
 
-	options.User.RequireUniqueEmail = true;
+    options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddSignInManager<SignInManager<User>>()
@@ -56,10 +56,10 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 
 #region Logging
 builder.Host.UseSerilog((ctx, lc) => lc
-	.ReadFrom.Configuration(builder.Configuration)
-	.Destructure.ToMaximumDepth(2)
-	.Destructure.ToMaximumStringLength(10000)
-	.Destructure.ToMaximumCollectionCount(2));
+    .ReadFrom.Configuration(builder.Configuration)
+    .Destructure.ToMaximumDepth(2)
+    .Destructure.ToMaximumStringLength(10000)
+    .Destructure.ToMaximumCollectionCount(2));
 #endregion
 
 var app = builder.Build();
@@ -67,8 +67,8 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-	options.SwaggerEndpoint(Constants.SwaggerEndpoint, Constants.SwaggerVersion);
-	options.InjectStylesheet(Constants.SwaggerStyles);
+    options.SwaggerEndpoint(Constants.SwaggerEndpoint, Constants.SwaggerVersion);
+    options.InjectStylesheet(Constants.SwaggerStyles);
 });
 
 app.UseRouting();
@@ -81,18 +81,18 @@ app.UseMiddleware<ErrorHandlerMiddleware>();
 var jwtOptions = app.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>();
 if (jwtOptions is not null)
 {
-	var tokenValidationParameters = new TokenValidationParameters
-	{
-		ValidateIssuer = false,
-		ValidIssuer = jwtOptions.Issuer,
-		ValidateAudience = false,
-		ValidAudience = jwtOptions.Audience,
-		ValidateLifetime = false,
-		ValidateIssuerSigningKey = false,
-		IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.SecretKey)),
-		ClockSkew = TimeSpan.Zero,
-	};
-	app.UseMiddleware<JwtTokenValidationMiddleware>(tokenValidationParameters);
+    var tokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidIssuer = jwtOptions.Issuer,
+        ValidateAudience = false,
+        ValidAudience = jwtOptions.Audience,
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.SecretKey)),
+        ClockSkew = TimeSpan.Zero,
+    };
+    app.UseMiddleware<JwtTokenValidationMiddleware>(tokenValidationParameters);
 }
 app.UseMiddleware<JwtValidationMiddleware>();
 #endregion

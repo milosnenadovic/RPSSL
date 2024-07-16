@@ -2,6 +2,6 @@
 
 public record GetChoicesRequest
 {
-	public string? FilterName { get; set; }
-	public bool? Active { get; set; }
+    public string? FilterName { get; set; }
+    public bool? Active { get; set; }
 }

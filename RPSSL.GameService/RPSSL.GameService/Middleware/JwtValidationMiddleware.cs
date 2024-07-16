@@ -10,70 +10,70 @@ namespace RPSSL.GameService.Middleware;
 
 public class JwtValidationMiddleware(RequestDelegate next, Serilog.ILogger logger)
 {
-	private readonly RequestDelegate _next = next;
-	private readonly Serilog.ILogger _logger = logger;
+    private readonly RequestDelegate _next = next;
+    private readonly Serilog.ILogger _logger = logger;
 
-	public async Task InvokeAsync(HttpContext context)
-	{
-		context.Request.EnableBuffering();
+    public async Task InvokeAsync(HttpContext context)
+    {
+        context.Request.EnableBuffering();
 
-		var authToken = context.Request?.Headers[HttpContextItemKeys.Authorization];
-		bool validToken = true;
+        var authToken = context.Request?.Headers[HttpContextItemKeys.Authorization];
+        bool validToken = true;
 
-		if (!string.IsNullOrEmpty(authToken))
-		{
-			validToken = await CheckAuthToken(authToken!);
-		}
-		if (!validToken)
-		{
-			var response = context.Response;
-			response.ContentType = "application/json";
-			response.StatusCode = (int)HttpStatusCode.Unauthorized;
-			var errorEpiResponse = new ErrorApiResponse()
-			{
-				Detail = Error.TokenParse.JwtMalformed,
-				Title = ErrorCodes.TokenParse.ToString(),
-				ErrorCode = (int)ErrorCodes.TokenParse,
-				ErrorCodes = []
-			};
+        if (!string.IsNullOrEmpty(authToken))
+        {
+            validToken = await CheckAuthToken(authToken!);
+        }
+        if (!validToken)
+        {
+            var response = context.Response;
+            response.ContentType = "application/json";
+            response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            var errorEpiResponse = new ErrorApiResponse()
+            {
+                Detail = Error.TokenParse.JwtMalformed,
+                Title = ErrorCodes.TokenParse.ToString(),
+                ErrorCode = (int)ErrorCodes.TokenParse,
+                ErrorCodes = []
+            };
 
-			var result = JsonSerializer.Serialize(errorEpiResponse);
-			await response.WriteAsync(result);
-		}
+            var result = JsonSerializer.Serialize(errorEpiResponse);
+            await response.WriteAsync(result);
+        }
 
-		await _next(context);
-	}
+        await _next(context);
+    }
 
-	private async Task<bool> CheckAuthToken(string authToken)
-	{
-		var userId = await AuthTokenHelper.GetUserId(authToken);
-		if (string.IsNullOrEmpty(userId))
-		{
-			_logger.Error("JWT validation failed: userId is empty.");
-			return false;
-		}
+    private async Task<bool> CheckAuthToken(string authToken)
+    {
+        var userId = await AuthTokenHelper.GetUserId(authToken);
+        if (string.IsNullOrEmpty(userId))
+        {
+            _logger.Error("JWT validation failed: userId is empty.");
+            return false;
+        }
 
-		var roleId = await AuthTokenHelper.GetRoleId(authToken);
-		if (roleId is null)
-		{
-			_logger.Error("JWT validation failed: roleId is null.");
-			return false;
-		}
+        var roleId = await AuthTokenHelper.GetRoleId(authToken);
+        if (roleId is null)
+        {
+            _logger.Error("JWT validation failed: roleId is null.");
+            return false;
+        }
 
-		var email = await AuthTokenHelper.GetEmail(authToken);
-		if (email is null)
-		{
-			_logger.Error("JWT validation failed: email is null.");
-			return false;
-		}
+        var email = await AuthTokenHelper.GetEmail(authToken);
+        if (email is null)
+        {
+            _logger.Error("JWT validation failed: email is null.");
+            return false;
+        }
 
-		var username = await AuthTokenHelper.GetUsername(authToken);
-		if (string.IsNullOrEmpty(username))
-		{
-			_logger.Error("JWT validation failed: username is empty.");
-			return false;
-		}
+        var username = await AuthTokenHelper.GetUsername(authToken);
+        if (string.IsNullOrEmpty(username))
+        {
+            _logger.Error("JWT validation failed: username is empty.");
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

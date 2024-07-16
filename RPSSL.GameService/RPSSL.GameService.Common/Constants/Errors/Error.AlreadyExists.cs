@@ -2,8 +2,8 @@
 
 public static partial class Error
 {
-	public static class AlreadyExists
-	{
-		public static string User => "ErrorAlreadyExistsUser";
-	}
+    public static class AlreadyExists
+    {
+        public static string User => "ErrorAlreadyExistsUser";
+    }
 }

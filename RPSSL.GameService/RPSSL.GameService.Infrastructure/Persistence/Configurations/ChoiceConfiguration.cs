@@ -6,21 +6,21 @@ namespace RPSSL.GameService.Infrastructure.Persistence.Configurations;
 
 public class ChoiceConfiguration : IEntityTypeConfiguration<Choice>
 {
-	public void Configure(EntityTypeBuilder<Choice> builder)
-	{
-		builder.Property(x => x.Id)
-			.HasAnnotation("MinValue", 1)
-			.HasAnnotation("MaxValue", 5);
+    public void Configure(EntityTypeBuilder<Choice> builder)
+    {
+        builder.Property(x => x.Id)
+            .HasAnnotation("MinValue", 1)
+            .HasAnnotation("MaxValue", 5);
 
-		builder.Property(x => x.Name)
-			.HasMaxLength(12)
-			.IsRequired();
+        builder.Property(x => x.Name)
+            .HasMaxLength(12)
+            .IsRequired();
 
-		builder.HasIndex(x => x.Name)
-			.IsUnique();
+        builder.HasIndex(x => x.Name)
+            .IsUnique();
 
-		builder.HasMany(x => x.ChoiceWins)
-		   .WithOne()
-		   .HasForeignKey(x => x.ChoiceId);
-	}
+        builder.HasMany(x => x.ChoiceWins)
+           .WithOne()
+           .HasForeignKey(x => x.ChoiceId);
+    }
 }
