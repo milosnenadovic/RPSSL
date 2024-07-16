@@ -1,0 +1,88 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.WebUtilities
+@using RPSSL.Web.Auth
+@using Microsoft.AspNetCore.Components.Authorization
+@using RPSSL.Web.Contracts.User
+@using RPSSL.Web.Helpers
+@using RPSSL.Web.Services.Abstractions
+@using MatBlazor
+@using Microsoft.AspNetCore.Components;
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+@inject LocalizationManager Localized
+@inject IUserService UserService
+@inject IMatToaster Toaster
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <EditForm Enhance Model="User" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="card-header">@Localized["Login"]</div>
+                <div class="card-body">
+
+                    <div class="form-group mb-3">
+                        <input @bind="User.Username"
+                               class="form-control"
+                               type="email"
+                               placeholder="@Localized["Username"]">
+                        </input>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <input class="form-control"
+                                   @bind="User.Password"
+                                   placeholder="Password"
+                                   aria-label="Password"
+                                   aria-describedby="@Localized["Password"]">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    @if (lockedForm)
+                    {
+                        <button class="btn btn-primary float-end" type="submit" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            @Localized["Login"]
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary float-end"
+                                type="submit">
+                            @Localized["Login"]
+                        </button>
+                    }
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    public LoginUserRequest User { get; set; } = new();
+    private bool lockedForm;
+
+    private async Task<bool> HandleLogin()
+    {
+        lockedForm = true;
+
+        var returnedUser = await UserService.Login(User);
+        if (!returnedUser.IsSuccess)
+        {
+            Toaster.Add(Localized[returnedUser.DetailedMessage], MatToastType.Danger, Localized[returnedUser.Message]);
+            lockedForm = false;
+            return await Task.FromResult(false);
+        }
+
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("redirectUri", out var returnUrl)) NavManager.NavigateTo($"/{returnUrl}");
+        else NavManager.NavigateTo($"/{returnUrl}", forceLoad: true);
+
+        lockedForm = false;
+        return await Task.FromResult(true);
+    }
+}
